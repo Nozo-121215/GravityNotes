@@ -1,4 +1,4 @@
-name: Build and Release DirectX Game
+name: Build and Release GravityNotes
 
 on:
   workflow_dispatch:
@@ -29,7 +29,7 @@ jobs:
         }
         
         # Zipの名前 $version は変数
-        $archiveName = "DIRECTX_BUILD_v$version.zip"
+        $archiveName = "GravityNotes_BUILD_v$version.zip"
 
         Write-Output "number=$version" >> $env:GITHUB_OUTPUT
         Write-Output "archive_name=$archiveName" >> $env:GITHUB_OUTPUT
@@ -38,10 +38,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Clean
-      run: msbuild "DirectX_Framework.sln" /t:Clean /p:Configuration="Release" /p:Platform="x64"
+      run: msbuild "GravityNotes.sln" /t:Clean /p:Configuration="Release" /p:Platform="x64"
 
     - name: Build with MSBuild
-      run: msbuild "DirectX_Framework.sln" /p:Configuration="Release" /p:Platform="x64" /m /v:minimal
+      run: msbuild "GravityNotes.sln" /p:Configuration="Release" /p:Platform="x64" /m /v:minimal
 
     - name: Collect files
       shell: powershell
