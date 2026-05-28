@@ -8,6 +8,7 @@
 #include "define.h"
 #include "renderer.h"
 #include "font.h"
+#include "fade.h"
 #include <vector>
 #include <memory>
 #include <string>
@@ -420,6 +421,10 @@ void Debugscore_Update(void)
 	if (Keyboard_IsKeyDownTrigger(KK_J))
 	{
 		TryJudgeLaneHit(GetLaneFromKey(KK_J), chartTime);
+	}
+	if (Keyboard_IsKeyDownTrigger(KK_ESCAPE))
+	{
+		StartFade(SCENE_TITLE);
 	}
 
 	UpdateJudgePopups(deltaTime);
