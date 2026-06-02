@@ -2,7 +2,7 @@
 
 void main(in VS_IN In, out PS_IN Out)
 {
-	Out = (PS_IN) 0; // ★ 追加: 出力構造体を完全初期化
+	Out = (PS_IN) 0; // 追加: 出力構造体を完全初期化
 	
     // 頂点変換
     matrix wvp;
