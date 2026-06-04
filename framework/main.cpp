@@ -23,6 +23,11 @@
 #include "fade.h"
 #include "sound.h"
 #include "shadermanager.h"
+#include "../framework/imgui/imgui.h"
+#include "../framework/imgui/imgui_impl_win32.h"
+#include "../framework/imgui/imgui_impl_dx11.h"
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam,
+	LPARAM lParam);
 
 
 #pragma	comment (lib, "d3d11.lib")
@@ -146,6 +151,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	//ウィンドウ内部の更新要求
 	UpdateWindow(hWnd);
 	InitRenderer(hInstance, hWnd, TRUE);
+
+	//ImGui の Win32 と DirectX 11 バックエンドを初期化
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(GetDevice(), GetDeviceContext());
 
 	// 初期ウィンドウクライアントサイズをDirect3Dに通知
 	{
@@ -308,6 +319,11 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	} while (msg.message != WM_QUIT);//windowsから終了メッセージが来たらループ終了
 
+	//ImGui のクリーンアップ
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 	Finalize();
 	UninitSound();
 	Fade_Finalize();
@@ -331,6 +347,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	//HDC hdc;			//デバイスコンテキスト
 	//PAINTSTRUCT ps;		//ウィンドウ画面の大きさなど描画関連の情報
+
+	//ImGui の Win32 メッセージハンドラを最初に呼び出す（ImGuiが処理したいメッセージを先に処理させる）
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
 
 	Mouse_ProcessMessage(uMsg, wParam, lParam);
 

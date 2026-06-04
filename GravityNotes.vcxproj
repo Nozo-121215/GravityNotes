@@ -163,14 +163,26 @@
     <ClCompile Include="debugscene\debug_model_scene.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="field.cpp" />
     <ClCompile Include="framework\anim_sprite3d.cpp" />
     <ClCompile Include="framework\billboard.cpp" />
-    <ClCompile Include="framework\camera.cpp" />
+    <ClCompile Include="framework\camera.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="framework\ClickFont.cpp" />
     <ClCompile Include="framework\debug_ostream.cpp" />
     <ClCompile Include="framework\fade.cpp" />
     <ClCompile Include="framework\font.cpp" />
     <ClCompile Include="framework\glb_model.cpp" />
+    <ClCompile Include="framework\imgui\imgui.cpp" />
+    <ClCompile Include="framework\imgui\imgui_draw.cpp" />
+    <ClCompile Include="framework\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="framework\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="framework\imgui\imgui_tables.cpp" />
+    <ClCompile Include="framework\imgui\imgui_widgets.cpp" />
     <ClCompile Include="framework\keyboard.cpp" />
     <ClCompile Include="framework\main.cpp" />
     <ClCompile Include="framework\model.cpp" />
@@ -180,6 +192,7 @@
     <ClCompile Include="framework\texture.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="stageselect.cpp" />
@@ -198,9 +211,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="define.h" />
+    <ClInclude Include="field.h" />
     <ClInclude Include="framework\anim_sprite3d.h" />
     <ClInclude Include="framework\billboard.h" />
-    <ClInclude Include="framework\camera.h" />
+    <ClInclude Include="framework\camera.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="framework\ClickFont.h" />
     <ClInclude Include="framework\component.h" />
     <ClInclude Include="framework\debug_ostream.h" />
@@ -209,6 +228,14 @@
     <ClInclude Include="framework\font.h" />
     <ClInclude Include="framework\glb_model.h" />
     <ClInclude Include="framework\HoleSprite.h" />
+    <ClInclude Include="framework\imgui\imconfig.h" />
+    <ClInclude Include="framework\imgui\imgui.h" />
+    <ClInclude Include="framework\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="framework\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="framework\imgui\imgui_internal.h" />
+    <ClInclude Include="framework\imgui\imstb_rectpack.h" />
+    <ClInclude Include="framework\imgui\imstb_textedit.h" />
+    <ClInclude Include="framework\imgui\imstb_truetype.h" />
     <ClInclude Include="framework\keyboard.h" />
     <ClInclude Include="framework\main.h" />
     <ClInclude Include="framework\model.h" />
@@ -220,6 +247,7 @@
     <ClInclude Include="framework\texture.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="scoreloader.h" />

@@ -69,6 +69,30 @@
     <ClCompile Include="mouse.cpp">
       <Filter>フレームワーク\etc</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ingame\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="field.cpp">
+      <Filter>ingame\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\imgui\imgui.cpp">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\imgui\imgui_draw.cpp">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\imgui\imgui_impl_dx11.cpp">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\imgui\imgui_impl_win32.cpp">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\imgui\imgui_tables.cpp">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\imgui\imgui_widgets.cpp">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework\camera.h">
@@ -163,6 +187,36 @@
     <ClInclude Include="mouse.h">
       <Filter>フレームワーク\etc</Filter>
     </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ingame\h</Filter>
+    </ClInclude>
+    <ClInclude Include="field.h">
+      <Filter>ingame\h</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imconfig.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imgui_impl_dx11.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imgui_impl_win32.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imgui_internal.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imstb_rectpack.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imstb_textedit.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imstb_truetype.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\imgui\imgui.h">
+      <Filter>フレームワーク\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="フレームワーク">
@@ -191,6 +245,18 @@
     </Filter>
     <Filter Include="譜面読み込み">
       <UniqueIdentifier>{4f4f56fd-3896-4ebe-9b6f-2b74a0767648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ingame">
+      <UniqueIdentifier>{a332fe49-7ef9-4e75-93cd-14f40959dd2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ingame\cpp">
+      <UniqueIdentifier>{03dd0ae2-4ea6-4066-a287-294e1dabc386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ingame\h">
+      <UniqueIdentifier>{2846224a-66c3-4129-8854-60b8e97ccc87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="フレームワーク\imgui">
+      <UniqueIdentifier>{9e8ef134-560e-4672-8c40-84b3777876a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
