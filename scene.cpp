@@ -12,7 +12,7 @@
 using namespace DirectX;
 
 //aaaaaaa
-static SCENE scene = SCENE_DEBUG_SCORE;
+static SCENE scene = SCENE_TITLE;
 
 void Init( void )
 {
