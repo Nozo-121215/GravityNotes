@@ -12,14 +12,20 @@ void main(in VS_IN In, out PS_IN Out)
     In.Normal.w = 0.0f;
     float4 worldNormal = mul(In.Normal, World);
     worldNormal = normalize(worldNormal);
+    float3 lightDirection = normalize(Light.Direction.xyz);
 
     // ランバート反射
-    float light = -dot(Light.Direction.xyz, worldNormal.xyz);
-    light = saturate(light);
+    float light = 0.0f;
+    if (Light.Enable)
+    {
+        light = saturate(-dot(lightDirection, worldNormal.xyz));
+    }
 
     // 出力カラー計算 (頂点色×マテリアル色にライト乗算)
     float4 baseDiffuse = In.Diffuse * MaterialDiffuse;
-    Out.Diffuse.rgb = light * baseDiffuse.rgb;
+    float3 ambient = saturate(Light.Ambient.rgb);
+    float3 diffuse = light * baseDiffuse.rgb * Light.Diffuse.rgb;
+    Out.Diffuse.rgb = saturate(baseDiffuse.rgb * ambient + diffuse);
     Out.Diffuse.a = baseDiffuse.a;
 
     Out.Normal = worldNormal;

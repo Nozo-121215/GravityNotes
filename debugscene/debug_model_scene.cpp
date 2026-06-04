@@ -375,7 +375,7 @@ void DebugModelScene_Draw(void)
 	}
 
 	// 家具描画（展示モデル＋ビルボードアイコン含む）
-	SetParameter(XMFLOAT4(OUTLINE_WIDTH, 0.0f, 0.0f, 0.0f));
+	/*SetParameter(XMFLOAT4(OUTLINE_WIDTH, 0.0f, 0.0f, 0.0f));
 	SetCullState(CULLSTATE_FRONT);
 	for (int i = 0; i < (int)g_Entries.size(); i++)
 	{
@@ -392,7 +392,7 @@ void DebugModelScene_Draw(void)
 			);
 		}
 	}
-	SetCullState(CULLSTATE_NONE);
+	SetCullState(CULLSTATE_NONE);*/
 
 	SetParameter(XMFLOAT4(RIM_LIGHT_BRIGHTNESS, 0.0f, 0.0f, 0.0f));
 	for (int i = 0; i < (int)g_Entries.size(); i++)
