@@ -182,6 +182,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="stageselect.cpp" />
     <ClCompile Include="shader\renderer.cpp" />
     <ClCompile Include="title.cpp" />
   </ItemGroup>
@@ -222,6 +223,7 @@
     <ClInclude Include="scene.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="scoreloader.h" />
+    <ClInclude Include="stageselect.h" />
     <ClInclude Include="shader\shadermanager.h" />
     <ClInclude Include="shader\renderer.h" />
     <ClInclude Include="title.h" />
