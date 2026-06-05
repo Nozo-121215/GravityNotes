@@ -13,7 +13,7 @@
 using namespace DirectX;
 
 //aaaaaaa
-static SCENE scene = SCENE_TITLE;
+static SCENE scene = SCENE_GAME;
 
 void Init( void )
 {

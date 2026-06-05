@@ -16,6 +16,7 @@
 #include "mouse.h"
 #include "model.h"
 #include "debugcamera.h"
+#include "komachi/debug_ui.h"
 
 using namespace DirectX;
 
@@ -50,6 +51,7 @@ void Game_Draw(void)
 
 		Sprite_EndDraw2D();
 	}
+	DebugUI_Draw();
 }
 
 void Game_Finalize(void)
