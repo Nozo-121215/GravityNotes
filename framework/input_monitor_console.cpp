@@ -1,13 +1,26 @@
 ﻿#include "input_monitor_console.h"
-
 #include <cstdio>
-
 #include "gamepad.h"
 
 #if defined(_DEBUG)
 namespace
 {
 	bool g_InputConsoleEnabled = false;
+
+	const char* BackendToString(Gamepad_InputBackend backend)
+	{
+		switch (backend)
+		{
+		case GAMEPAD_INPUT_BACKEND_XINPUT:
+			return "XInput";
+		case GAMEPAD_INPUT_BACKEND_RAWINPUT:
+			return "RawInput";
+		case GAMEPAD_INPUT_BACKEND_DIRECTINPUT:
+			return "DirectInput";
+		default:
+			return "None";
+		}
+	}
 }
 #endif
 
@@ -30,8 +43,8 @@ void InputMonitorConsole_Initialize(void)
 	freopen_s(&fpErr, "CONOUT$", "w", stderr);
 	SetConsoleTitle(L"GravityNotes Input Monitor");
 
-	printf("[Input Monitor] 1P XInput state\n");
-	printf("pad A B X Y Start Back LT RT LS(x,y) RS(x,y)\n");
+	printf("[Input Monitor] XInput priority + RawInput/DirectInput fallback\n");
+	printf("slot mask backend      A B X Y Start Back LT RT LS(x,y) RS(x,y)\n");
 	g_InputConsoleEnabled = true;
 #endif
 }
@@ -52,8 +65,10 @@ void InputMonitorConsole_Update(void)
 	}
 	outputInterval = 0;
 
-	const int player = 0;
+	const int player = Gamepad_FindConnectedPlayer();
+	const unsigned int mask = Gamepad_GetConnectedMask();
 	const bool connected = Gamepad_IsConnected(player);
+	const Gamepad_InputBackend backend = Gamepad_GetActiveBackend();
 	const bool aButton = Gamepad_IsButtonDown(player, GPB_A);
 	const bool bButton = Gamepad_IsButtonDown(player, GPB_B);
 	const bool xButton = Gamepad_IsButtonDown(player, GPB_X);
@@ -65,8 +80,10 @@ void InputMonitorConsole_Update(void)
 	const Gamepad_ThumbStick leftStick = Gamepad_GetLeftStick(player);
 	const Gamepad_ThumbStick rightStick = Gamepad_GetRightStick(player);
 
-	printf("\r%-3s %d %d %d %d   %d     %d   %.2f %.2f (%+.2f,%+.2f) (%+.2f,%+.2f)   ",
-		connected ? "ON" : "OFF",
+	printf("\r%4d 0x%X %-11s %d %d %d %d   %d     %d   %.2f %.2f (%+.2f,%+.2f) (%+.2f,%+.2f)   ",
+		connected ? player : -1,
+		mask,
+		BackendToString(backend),
 		aButton ? 1 : 0,
 		bButton ? 1 : 0,
 		xButton ? 1 : 0,

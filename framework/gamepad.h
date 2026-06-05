@@ -32,11 +32,22 @@ typedef struct Gamepad_ThumbStick_tag
     float y;
 } Gamepad_ThumbStick;
 
+typedef enum Gamepad_InputBackend_tag
+{
+    GAMEPAD_INPUT_BACKEND_NONE = 0,
+    GAMEPAD_INPUT_BACKEND_XINPUT,
+    GAMEPAD_INPUT_BACKEND_RAWINPUT,
+    GAMEPAD_INPUT_BACKEND_DIRECTINPUT,
+} Gamepad_InputBackend;
+
 void Gamepad_Initialize(void);
 void Gamepad_Finalize(void);
 void Gamepad_Update(void);
+void Gamepad_ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam);
 
 bool Gamepad_IsConnected(int playerIndex);
+int Gamepad_FindConnectedPlayer(void);
+unsigned int Gamepad_GetConnectedMask(void);
 bool Gamepad_IsButtonDown(int playerIndex, Gamepad_Button button);
 bool Gamepad_IsButtonTrigger(int playerIndex, Gamepad_Button button);
 
@@ -49,3 +60,4 @@ void Gamepad_SetVibration(int playerIndex, float leftMotor, float rightMotor);
 
 void Gamepad_SetLayout(Gamepad_Layout layout);
 Gamepad_Layout Gamepad_GetLayout(void);
+Gamepad_InputBackend Gamepad_GetActiveBackend(void);

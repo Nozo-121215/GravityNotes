@@ -4,8 +4,12 @@
 
 namespace
 {
-    const int kPlayerIndex = 0;
     const float kMoveStickThreshold = 0.5f;
+
+    int GetActivePlayerIndex()
+    {
+        return Gamepad_FindConnectedPlayer();
+    }
 
     float MinFloat(float lhs, float rhs)
     {
@@ -36,22 +40,24 @@ void Input_Update(void)
 
 bool Input_IsActionDown(Input_Action action)
 {
+    const int player = GetActivePlayerIndex();
+
     switch (action)
     {
     case INPUT_ACTION_DECIDE:
-        return Keyboard_IsKeyDown(KK_ENTER) || Keyboard_IsKeyDown(KK_SPACE) || Gamepad_IsButtonDown(kPlayerIndex, GPB_A);
+        return Keyboard_IsKeyDown(KK_ENTER) || Keyboard_IsKeyDown(KK_SPACE) || Gamepad_IsButtonDown(player, GPB_A);
     case INPUT_ACTION_CANCEL:
-        return Keyboard_IsKeyDown(KK_ESCAPE) || Keyboard_IsKeyDown(KK_BACK) || Gamepad_IsButtonDown(kPlayerIndex, GPB_B);
+        return Keyboard_IsKeyDown(KK_ESCAPE) || Keyboard_IsKeyDown(KK_BACK) || Gamepad_IsButtonDown(player, GPB_B);
     case INPUT_ACTION_MENU_UP:
-        return Keyboard_IsKeyDown(KK_UP) || Gamepad_IsButtonDown(kPlayerIndex, GPB_DPAD_UP) || Input_GetMoveVector().y > kMoveStickThreshold;
+        return Keyboard_IsKeyDown(KK_UP) || Gamepad_IsButtonDown(player, GPB_DPAD_UP) || Input_GetMoveVector().y > kMoveStickThreshold;
     case INPUT_ACTION_MENU_DOWN:
-        return Keyboard_IsKeyDown(KK_DOWN) || Gamepad_IsButtonDown(kPlayerIndex, GPB_DPAD_DOWN) || Input_GetMoveVector().y < -kMoveStickThreshold;
+        return Keyboard_IsKeyDown(KK_DOWN) || Gamepad_IsButtonDown(player, GPB_DPAD_DOWN) || Input_GetMoveVector().y < -kMoveStickThreshold;
     case INPUT_ACTION_MENU_LEFT:
-        return Keyboard_IsKeyDown(KK_LEFT) || Gamepad_IsButtonDown(kPlayerIndex, GPB_DPAD_LEFT) || Input_GetMoveVector().x < -kMoveStickThreshold;
+        return Keyboard_IsKeyDown(KK_LEFT) || Gamepad_IsButtonDown(player, GPB_DPAD_LEFT) || Input_GetMoveVector().x < -kMoveStickThreshold;
     case INPUT_ACTION_MENU_RIGHT:
-        return Keyboard_IsKeyDown(KK_RIGHT) || Gamepad_IsButtonDown(kPlayerIndex, GPB_DPAD_RIGHT) || Input_GetMoveVector().x > kMoveStickThreshold;
+        return Keyboard_IsKeyDown(KK_RIGHT) || Gamepad_IsButtonDown(player, GPB_DPAD_RIGHT) || Input_GetMoveVector().x > kMoveStickThreshold;
     case INPUT_ACTION_PAUSE:
-        return Keyboard_IsKeyDown(KK_P) || Gamepad_IsButtonDown(kPlayerIndex, GPB_START);
+        return Keyboard_IsKeyDown(KK_P) || Gamepad_IsButtonDown(player, GPB_START);
     default:
         return false;
     }
@@ -59,22 +65,24 @@ bool Input_IsActionDown(Input_Action action)
 
 bool Input_IsActionTrigger(Input_Action action)
 {
+    const int player = GetActivePlayerIndex();
+
     switch (action)
     {
     case INPUT_ACTION_DECIDE:
-        return Keyboard_IsKeyDownTrigger(KK_ENTER) || Keyboard_IsKeyDownTrigger(KK_SPACE) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_A);
+        return Keyboard_IsKeyDownTrigger(KK_ENTER) || Keyboard_IsKeyDownTrigger(KK_SPACE) || Gamepad_IsButtonTrigger(player, GPB_A);
     case INPUT_ACTION_CANCEL:
-        return Keyboard_IsKeyDownTrigger(KK_ESCAPE) || Keyboard_IsKeyDownTrigger(KK_BACK) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_B);
+        return Keyboard_IsKeyDownTrigger(KK_ESCAPE) || Keyboard_IsKeyDownTrigger(KK_BACK) || Gamepad_IsButtonTrigger(player, GPB_B);
     case INPUT_ACTION_MENU_UP:
-        return Keyboard_IsKeyDownTrigger(KK_UP) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_DPAD_UP);
+        return Keyboard_IsKeyDownTrigger(KK_UP) || Gamepad_IsButtonTrigger(player, GPB_DPAD_UP);
     case INPUT_ACTION_MENU_DOWN:
-        return Keyboard_IsKeyDownTrigger(KK_DOWN) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_DPAD_DOWN);
+        return Keyboard_IsKeyDownTrigger(KK_DOWN) || Gamepad_IsButtonTrigger(player, GPB_DPAD_DOWN);
     case INPUT_ACTION_MENU_LEFT:
-        return Keyboard_IsKeyDownTrigger(KK_LEFT) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_DPAD_LEFT);
+        return Keyboard_IsKeyDownTrigger(KK_LEFT) || Gamepad_IsButtonTrigger(player, GPB_DPAD_LEFT);
     case INPUT_ACTION_MENU_RIGHT:
-        return Keyboard_IsKeyDownTrigger(KK_RIGHT) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_DPAD_RIGHT);
+        return Keyboard_IsKeyDownTrigger(KK_RIGHT) || Gamepad_IsButtonTrigger(player, GPB_DPAD_RIGHT);
     case INPUT_ACTION_PAUSE:
-        return Keyboard_IsKeyDownTrigger(KK_P) || Gamepad_IsButtonTrigger(kPlayerIndex, GPB_START);
+        return Keyboard_IsKeyDownTrigger(KK_P) || Gamepad_IsButtonTrigger(player, GPB_START);
     default:
         return false;
     }
@@ -82,7 +90,8 @@ bool Input_IsActionTrigger(Input_Action action)
 
 Input_Vector2 Input_GetMoveVector(void)
 {
-    const Gamepad_ThumbStick leftStick = Gamepad_GetLeftStick(kPlayerIndex);
+    const int player = GetActivePlayerIndex();
+    const Gamepad_ThumbStick leftStick = Gamepad_GetLeftStick(player);
 
     Input_Vector2 out = {};
     out.x = leftStick.x;
@@ -98,7 +107,8 @@ Input_Vector2 Input_GetMoveVector(void)
 
 Input_Vector2 Input_GetLookVector(void)
 {
-    const Gamepad_ThumbStick rightStick = Gamepad_GetRightStick(kPlayerIndex);
+    const int player = GetActivePlayerIndex();
+    const Gamepad_ThumbStick rightStick = Gamepad_GetRightStick(player);
     Input_Vector2 out = {};
     out.x = rightStick.x;
     out.y = rightStick.y;
@@ -107,7 +117,11 @@ Input_Vector2 Input_GetLookVector(void)
 
 void Input_SetRumble(float leftMotor, float rightMotor)
 {
-    Gamepad_SetVibration(kPlayerIndex, leftMotor, rightMotor);
+    const int player = GetActivePlayerIndex();
+    if (player >= 0)
+    {
+        Gamepad_SetVibration(player, leftMotor, rightMotor);
+    }
 }
 
 void Input_SetGamepadLayout(Gamepad_Layout layout)

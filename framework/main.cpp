@@ -362,6 +362,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return true;
 
 	Mouse_ProcessMessage(uMsg, wParam, lParam);
+	Gamepad_ProcessMessage(uMsg, wParam, lParam);
 
 	switch (uMsg)
 	{
