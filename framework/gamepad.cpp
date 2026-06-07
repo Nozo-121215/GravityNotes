@@ -202,10 +202,10 @@ namespace
         case 4: return XINPUT_GAMEPAD_Y;
         case 5: return XINPUT_GAMEPAD_LEFT_SHOULDER;
         case 6: return XINPUT_GAMEPAD_RIGHT_SHOULDER;
-        case 7: return XINPUT_GAMEPAD_BACK;
-        case 8: return XINPUT_GAMEPAD_START;
-        case 9: return XINPUT_GAMEPAD_LEFT_THUMB;
-        case 10: return XINPUT_GAMEPAD_RIGHT_THUMB;
+        case 9: return XINPUT_GAMEPAD_BACK;
+        case 10: return XINPUT_GAMEPAD_START;
+        case 11: return XINPUT_GAMEPAD_LEFT_THUMB;
+        case 12: return XINPUT_GAMEPAD_RIGHT_THUMB;
         case 0x90: return XINPUT_GAMEPAD_DPAD_UP;
         case 0x91: return XINPUT_GAMEPAD_DPAD_DOWN;
         case 0x92: return XINPUT_GAMEPAD_DPAD_RIGHT;
@@ -352,6 +352,9 @@ namespace
             return;
         }
 
+        bool leftTriggerDigital = false;
+        bool rightTriggerDigital = false;
+
         for (USHORT i = 0; i < device.buttonCapCount; ++i)
         {
             ULONG usageLength = 32;
@@ -364,6 +367,14 @@ namespace
 
             for (ULONG u = 0; u < usageLength; ++u)
             {
+                if (usages[u] == 7)
+                {
+                    leftTriggerDigital = true;
+                }
+                else if (usages[u] == 8)
+                {
+                    rightTriggerDigital = true;
+                }
                 outPad->wButtons |= RawButtonUsageToMask(usages[u]);
             }
         }
@@ -410,6 +421,15 @@ namespace
             default:
                 break;
             }
+        }
+
+        if (leftTriggerDigital && outPad->bLeftTrigger < 250)
+        {
+            outPad->bLeftTrigger = 255;
+        }
+        if (rightTriggerDigital && outPad->bRightTrigger < 250)
+        {
+            outPad->bRightTrigger = 255;
         }
     }
 
@@ -489,10 +509,12 @@ namespace
         if (js.rgbButtons[3] & 0x80) out.wButtons |= XINPUT_GAMEPAD_Y;
         if (js.rgbButtons[4] & 0x80) out.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
         if (js.rgbButtons[5] & 0x80) out.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
-        if (js.rgbButtons[6] & 0x80) out.wButtons |= XINPUT_GAMEPAD_BACK;
-        if (js.rgbButtons[7] & 0x80) out.wButtons |= XINPUT_GAMEPAD_START;
-        if (js.rgbButtons[8] & 0x80) out.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB;
-        if (js.rgbButtons[9] & 0x80) out.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB;
+        if (js.rgbButtons[6] & 0x80) out.bLeftTrigger = 255;
+        if (js.rgbButtons[7] & 0x80) out.bRightTrigger = 255;
+        if (js.rgbButtons[8] & 0x80) out.wButtons |= XINPUT_GAMEPAD_BACK;
+        if (js.rgbButtons[9] & 0x80) out.wButtons |= XINPUT_GAMEPAD_START;
+        if (js.rgbButtons[10] & 0x80) out.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB;
+        if (js.rgbButtons[11] & 0x80) out.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB;
 
         const DWORD pov = js.rgdwPOV[0];
         if (pov != 0xFFFFFFFF)
