@@ -1148,6 +1148,38 @@ void ModelDraw(MODEL* model, XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale, const X
 	RenderNode(model, model->AiScene->mRootNode, identity, finalColor, useColorReplace);
 }
 
+void ModelDrawShadowMap(MODEL* model, XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale, XMMATRIX lightView, XMMATRIX lightProjection)
+{
+	if (!model) return;
+
+	// 影を作るだけなので、ShadowMap専用シェーダーを使う。
+	// このシェーダーは色を出さず、深度バッファに距離だけを書き込む。
+	GetDeviceContext()->IASetInputLayout(GetShader(S_SHADOW_MAP)->GetVertexLayout());
+	GetDeviceContext()->VSSetShader(GetShader(S_SHADOW_MAP)->GetVertexShader(), NULL, 0);
+	GetDeviceContext()->PSSetShader(GetShader(S_SHADOW_MAP)->GetPixelShader(), NULL, 0);
+
+	XMMATRIX TranslationMatrix = XMMatrixTranslation(pos.x, pos.y, pos.z);
+	XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(
+		XMConvertToRadians(rot.x),
+		XMConvertToRadians(rot.y),
+		XMConvertToRadians(rot.z));
+	XMMATRIX ScalingMatrix = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+	XMMATRIX World = ScalingMatrix * RotationMatrix * TranslationMatrix;
+
+	SetWorldMatrix(World);
+
+	// 通常描画ではカメラのView/Projectionを使うが、ここではライト視点の行列を使う。
+	SetViewMatrix(lightView);
+	SetProjectionMatrix(lightProjection);
+
+	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	XMMATRIX identity = XMMatrixIdentity();
+	// RenderNodeは通常描画と同じメッシュを描く。ShadowMapでは色やテクスチャは最終結果に使われない。
+	RenderNode(model, model->AiScene->mRootNode, identity, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), false);
+}
+
 void ModelAnimationDraw(MODEL* model, XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT3 scale, const BoneMatrices& boneMatrices, const XMFLOAT4& color, bool useColorReplace, SHADERTYPE shadertype, const AnimationClip* clip, double animTime)
 {
 	if (!model) return;

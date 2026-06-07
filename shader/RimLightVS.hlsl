@@ -2,6 +2,8 @@
 
 void main(in VS_IN In, out PS_IN Out)
 {
+    Out = (PS_IN)0;
+
     // モデル空間の頂点座標を、画面に描画できる座標へ変換する
     matrix wvp;
     wvp = mul(World, View);
