@@ -67,6 +67,9 @@ static const float MODEL_SPACING = 5.0f;  // モデル同士の間隔
 static const float LABEL_RANGE = 8.0f;  // この距離以内で名前を表示
 static const float RIM_LIGHT_BRIGHTNESS = 1.0f; // リムライトの明るさ（距離減衰なしの定数値で表現）
 static const float OUTLINE_WIDTH = 0.009f; // アウトラインの太さ
+// ShadowMapの調整値。Biasは影のちらつき防止、Brightnessは影になった場所の明るさ。
+static const float SHADOW_BIAS = 0.004f; // 影のちらつき防止用の深度補正
+static const float SHADOW_BRIGHTNESS = 0.55f; // 影になった部分の明るさ
 
 // 原点キューブ表示用
 static MODEL* g_pCubeModel = nullptr;
@@ -226,19 +229,21 @@ void DebugModelScene_Initialize(void)
 	g_pFloorLight = new PointLight(
 		TRUE,
 		XMFLOAT4(0.0f, 5.0f, -5.0f, 1.0f),
-		XMFLOAT4(0.0f, -1.0f, 0.5f, 0.0f),
 		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-		20.0f,
+		50.0f,
 		1.0f
 	);
 
 	// 床用バッファ・テクスチャの作成
 	g_pFloorBillboard = new Billboard(XMFLOAT3(0.0f, -0.5f, 0.0f), XMFLOAT2(1.0f, 1.0f), XMFLOAT3(90.0f, 0.0f, 0.0f), "asset\\texture\\tex.png", false);
 	g_pFloorBillboard->SetBillboardMode(false);
+	// 床だけShadowReceiveシェーダーを使い、ShadowMapから影を受け取る。
+	g_pFloorBillboard->SetReceiveShadow(true);
 
 	// 原点表示用キューブモデルの読み込み
 	g_pCubeModel = ModelLoad("asset\\model\\cube.fbx");
 	g_ShowOriginCubes = false;
+	for (int i = 0; i < 10; i++)
 	for (int i = 0; i < 10; i++)
 	{
 		g_AnimationKeyHeld[i] = false;
@@ -343,6 +348,50 @@ void DebugModelScene_Draw(void)
 		g_pFloorLight->Apply(*g_pAmbientLight);
 	}
 
+	// 1. ShadowMap作成パス
+	// ライト位置からシーンを見て、モデルの深度だけをShadowMapに保存する。
+	int shadowCols = 6;
+	int shadowRows = ((int)g_Entries.size() + shadowCols - 1) / shadowCols;
+	if (shadowRows < 1) shadowRows = 1;
+
+	// 展示モデル全体の中央あたりをライトが見るようにする。
+	float shadowCenterZ = (shadowRows - 1) * MODEL_SPACING * 0.5f;
+
+	XMFLOAT4 lightPositionValue = g_pFloorLight ? g_pFloorLight->GetPosition() : XMFLOAT4(0.0f, 5.0f, -5.0f, 1.0f);
+	XMVECTOR shadowCenter = XMVectorSet(0.0f, 0.0f, shadowCenterZ, 1.0f);
+	XMVECTOR shadowEye = XMLoadFloat4(&lightPositionValue);
+
+	// 今のShadowMapはライト位置から見た1枚のカメラ。
+	// PointLightの全方向影ではなく、この視野に入ったものだけが影を作る。
+	XMMATRIX lightView = XMMatrixLookAtLH(shadowEye, shadowCenter, XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f));
+	float shadowFarZ = g_pFloorLight ? g_pFloorLight->GetRange() + 20.0f : 80.0f;
+	XMMATRIX lightProjection = XMMatrixPerspectiveFovLH(XMConvertToRadians(50.0f), 1.0f, 0.5f, shadowFarZ);
+
+	// ShadowReceiveシェーダーが同じライト視点で影判定できるように、行列をGPUへ渡す。
+	SetShadowMatrix(lightView * lightProjection, XMFLOAT4(SHADOW_BIAS, SHADOW_BRIGHTNESS, 0.0f, 0.0f));
+
+	// ここからEndShadowMapまでの描画は、画面ではなくShadowMapへ書かれる。
+	BeginShadowMap();
+	SetCullState(CULLSTATE_BACK);
+	for (int i = 0; i < (int)g_Entries.size(); i++)
+	{
+		if (g_Entries[i].pModel)
+		{
+			ModelDrawShadowMap(
+				g_Entries[i].pModel,
+				g_Entries[i].worldPos,
+				{ 0.0f, 0.0f, 0.0f },
+				{ 1.0f, 1.0f, 1.0f },
+				lightView,
+				lightProjection
+			);
+		}
+	}
+	SetCullState(CULLSTATE_NONE);
+
+	// ShadowMapへの書き込みを終えて、通常の画面描画に戻す。
+	EndShadowMap();
+
 	// --- 床の描画 ---
 	if (g_pFloorBillboard)
 	{
@@ -406,7 +455,7 @@ void DebugModelScene_Draw(void)
 				{ 1.0f, 1.0f, 1.0f },
 				XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
 				false,
-				S_RIM_LIGHT
+				S_PHONG
 			);
 		}
 	}
