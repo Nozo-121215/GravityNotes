@@ -1,8 +1,8 @@
 ﻿#pragma once
-
-#include <d3d11.h>
-#include <DirectXMath.h>
-using namespace DirectX;
+/*==============================================================================
+   統合デバッグシーン [debugscene.h]
+   複数のデバッグシーン (MODEL / LIGHTING / SCORE) を Tabキーで切り替える
+==============================================================================*/
 
 void DebugScene_Initialize(void);
 void DebugScene_Update(void);
