@@ -7,6 +7,9 @@
 #include "define.h"
 #include "font.h"
 #include "mouse.h"
+#include "model.h"
+#include "debugcamera.h"
+#include "komachi/debug_ui.h"
 #include "sound.h"
 #include "ClickFont.h"
 
@@ -60,6 +63,7 @@ void Game_Update(void)
 			SetSceneFade(SCENE_RESULT);
 		}
 	}
+	DebugUI_Draw();
 }
 
 void Game_Draw(void)
