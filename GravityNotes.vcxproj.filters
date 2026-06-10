@@ -59,10 +59,10 @@
       <Filter>デバッグ</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>ingame\cpp</Filter>
+      <Filter>SCENE_GAME\cpp</Filter>
     </ClCompile>
     <ClCompile Include="field.cpp">
-      <Filter>ingame\cpp</Filter>
+      <Filter>SCENE_GAME\cpp</Filter>
     </ClCompile>
     <ClCompile Include="framework\imgui\imgui.cpp">
       <Filter>フレームワーク\imgui</Filter>
@@ -92,7 +92,7 @@
       <Filter>SCENE_RESULT</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
-      <Filter>ingame\cpp</Filter>
+      <Filter>SCENE_GAME\cpp</Filter>
     </ClCompile>
     <ClCompile Include="scene.cpp">
       <Filter>フレームワーク\etc</Filter>
@@ -199,10 +199,10 @@
       <Filter>デバッグ</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>ingame\h</Filter>
+      <Filter>SCENE_GAME\h</Filter>
     </ClInclude>
     <ClInclude Include="field.h">
-      <Filter>ingame\h</Filter>
+      <Filter>SCENE_GAME\h</Filter>
     </ClInclude>
     <ClInclude Include="framework\imgui\imconfig.h">
       <Filter>フレームワーク\imgui</Filter>
@@ -238,7 +238,7 @@
       <Filter>SCENE_RESULT</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
-      <Filter>ingame\h</Filter>
+      <Filter>SCENE_GAME\h</Filter>
     </ClInclude>
     <ClInclude Include="scene.h">
       <Filter>フレームワーク\etc</Filter>
@@ -290,15 +290,6 @@
     <Filter Include="譜面読み込み">
       <UniqueIdentifier>{4f4f56fd-3896-4ebe-9b6f-2b74a0767648}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ingame">
-      <UniqueIdentifier>{a332fe49-7ef9-4e75-93cd-14f40959dd2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ingame\cpp">
-      <UniqueIdentifier>{03dd0ae2-4ea6-4066-a287-294e1dabc386}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ingame\h">
-      <UniqueIdentifier>{2846224a-66c3-4129-8854-60b8e97ccc87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="フレームワーク\imgui">
       <UniqueIdentifier>{9e8ef134-560e-4672-8c40-84b3777876a5}</UniqueIdentifier>
     </Filter>
@@ -313,6 +304,15 @@
     </Filter>
     <Filter Include="フレームワーク\input">
       <UniqueIdentifier>{bac4b262-1b15-4645-bb16-9d1f3322cd89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE_GAME">
+      <UniqueIdentifier>{a332fe49-7ef9-4e75-93cd-14f40959dd2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE_GAME\cpp">
+      <UniqueIdentifier>{03dd0ae2-4ea6-4066-a287-294e1dabc386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE_GAME\h">
+      <UniqueIdentifier>{2846224a-66c3-4129-8854-60b8e97ccc87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
