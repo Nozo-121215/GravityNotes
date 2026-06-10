@@ -9,7 +9,7 @@
 #include "mouse.h"
 #include "sound.h"
 #include "ClickFont.h"
-
+// test
 using namespace DirectX;
 
 // 1. Ảnh nền phòng/bàn máy hát
@@ -33,7 +33,7 @@ void StageSelect_Initialize(void)
 	// Khởi tạo nền (Độ phân giải 2560 x 1440)
 	g_pBackground = new Sprite2D(
 		{ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f },
-		{ 1280.0f, 7200.0f },
+		{ 740.0f, 556.0f },
 		0.0f,
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		BLENDSTATE_NONE,
@@ -68,7 +68,7 @@ void StageSelect_Initialize(void)
 	// Khởi tạo đĩa chính ở GIỮA màn hình
 	g_pMainVinyl = new Sprite2D(
 		{ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f },
-		{ 800.0f, 800.0f },
+		{ 500.0f, 500.0f },
 		0.0f,
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		BLENDSTATE_ALFA, // ĐỔI TỪ BLENDSTATE_NONE THÀNH ALPHA
