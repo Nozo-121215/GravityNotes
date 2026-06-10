@@ -52,7 +52,7 @@ static void RefreshSelectedScoreText()
 	std::snprintf(
 		buf,
 		sizeof(buf),
-		"[%d/%d]\nMusic: %s\nComposer: %s\nChart: %s\nDifficulty: %.1f\nBPM: %.1f\nJSON: %s",
+		"[%d/%d]\nMusic: %s\n作曲者: %s\n譜面作者: %s\n難易度: %.1f\nBPM: %.1f\nJSON: %s",
 		g_SelectedScoreIndex + 1,
 		static_cast<int>(summaries.size()),
 		summary.musicname.c_str(),
