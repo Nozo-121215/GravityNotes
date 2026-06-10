@@ -22,15 +22,6 @@
     <ClCompile Include="framework\glb_model.cpp">
       <Filter>フレームワーク\3D</Filter>
     </ClCompile>
-    <ClCompile Include="framework\keyboard.cpp">
-      <Filter>フレームワーク\etc</Filter>
-    </ClCompile>
-    <ClCompile Include="framework\input_manager.cpp">
-      <Filter>フレームワーク\etc</Filter>
-    </ClCompile>
-    <ClCompile Include="framework\gamepad.cpp">
-      <Filter>フレームワーク\etc</Filter>
-    </ClCompile>
     <ClCompile Include="framework\main.cpp">
       <Filter>フレームワーク\etc</Filter>
     </ClCompile>
@@ -49,11 +40,6 @@
     <ClCompile Include="framework\texture.cpp">
       <Filter>フレームワーク\2D</Filter>
     </ClCompile>
-    <ClCompile Include="game.cpp" />
-    <ClCompile Include="result.cpp" />
-    <ClCompile Include="scene.cpp" />
-    <ClCompile Include="stageselect.cpp" />
-    <ClCompile Include="title.cpp" />
     <ClCompile Include="shader\renderer.cpp">
       <Filter>フレームワーク\シェーダー</Filter>
     </ClCompile>
@@ -71,9 +57,6 @@
     </ClCompile>
     <ClCompile Include="debugscene\debugscore.cpp">
       <Filter>デバッグ</Filter>
-    </ClCompile>
-    <ClCompile Include="mouse.cpp">
-      <Filter>フレームワーク\etc</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>ingame\cpp</Filter>
@@ -99,8 +82,35 @@
     <ClCompile Include="framework\imgui\imgui_widgets.cpp">
       <Filter>フレームワーク\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="framework\input_monitor_console.cpp">
+    <ClCompile Include="title.cpp">
+      <Filter>SCENE_TITLE</Filter>
+    </ClCompile>
+    <ClCompile Include="stageselect.cpp">
+      <Filter>SCENE_STAGESELECT</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>SCENE_RESULT</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>ingame\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
       <Filter>フレームワーク\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="mouse.cpp">
+      <Filter>フレームワーク\input</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\input_manager.cpp">
+      <Filter>フレームワーク\input</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\input_monitor_console.cpp">
+      <Filter>フレームワーク\input</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\gamepad.cpp">
+      <Filter>フレームワーク\input</Filter>
+    </ClCompile>
+    <ClCompile Include="framework\keyboard.cpp">
+      <Filter>フレームワーク\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,15 +144,6 @@
     <ClInclude Include="framework\HoleSprite.h">
       <Filter>フレームワーク\2D</Filter>
     </ClInclude>
-    <ClInclude Include="framework\keyboard.h">
-      <Filter>フレームワーク\etc</Filter>
-    </ClInclude>
-    <ClInclude Include="framework\input_manager.h">
-      <Filter>フレームワーク\etc</Filter>
-    </ClInclude>
-    <ClInclude Include="framework\gamepad.h">
-      <Filter>フレームワーク\etc</Filter>
-    </ClInclude>
     <ClInclude Include="framework\main.h">
       <Filter>フレームワーク\etc</Filter>
     </ClInclude>
@@ -170,11 +171,6 @@
     <ClInclude Include="define.h">
       <Filter>フレームワーク\etc</Filter>
     </ClInclude>
-    <ClInclude Include="game.h" />
-    <ClInclude Include="result.h" />
-    <ClInclude Include="scene.h" />
-    <ClInclude Include="stageselect.h" />
-    <ClInclude Include="title.h" />
     <ClInclude Include="shader\renderer.h">
       <Filter>フレームワーク\シェーダー</Filter>
     </ClInclude>
@@ -198,9 +194,6 @@
     </ClInclude>
     <ClInclude Include="debugscene\debugscore.h">
       <Filter>デバッグ</Filter>
-    </ClInclude>
-    <ClInclude Include="mouse.h">
-      <Filter>フレームワーク\etc</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>ingame\h</Filter>
@@ -232,8 +225,35 @@
     <ClInclude Include="framework\imgui\imgui.h">
       <Filter>フレームワーク\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="framework\input_monitor_console.h">
+    <ClInclude Include="title.h">
+      <Filter>SCENE_TITLE</Filter>
+    </ClInclude>
+    <ClInclude Include="stageselect.h">
+      <Filter>SCENE_STAGESELECT</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>SCENE_RESULT</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ingame\h</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
       <Filter>フレームワーク\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="mouse.h">
+      <Filter>フレームワーク\input</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\input_monitor_console.h">
+      <Filter>フレームワーク\input</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\input_manager.h">
+      <Filter>フレームワーク\input</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\keyboard.h">
+      <Filter>フレームワーク\input</Filter>
+    </ClInclude>
+    <ClInclude Include="framework\gamepad.h">
+      <Filter>フレームワーク\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +295,18 @@
     </Filter>
     <Filter Include="フレームワーク\imgui">
       <UniqueIdentifier>{9e8ef134-560e-4672-8c40-84b3777876a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE_TITLE">
+      <UniqueIdentifier>{4e94fb04-9662-4340-99f9-1c1fea704fab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE_STAGESELECT">
+      <UniqueIdentifier>{a055791a-7232-43a3-bdb8-9c6f84ac93bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENE_RESULT">
+      <UniqueIdentifier>{9a4b5d72-02c1-4f45-9065-7cf4a6712929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="フレームワーク\input">
+      <UniqueIdentifier>{bac4b262-1b15-4645-bb16-9d1f3322cd89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

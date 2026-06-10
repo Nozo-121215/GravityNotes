@@ -424,7 +424,7 @@ void Debugscore_Update(void)
 	}
 	if (Keyboard_IsKeyDownTrigger(KK_ESCAPE))
 	{
-		StartFade(SCENE_TITLE);
+		SetSceneFade(SCENE_TITLE);
 	}
 
 	UpdateJudgePopups(deltaTime);
