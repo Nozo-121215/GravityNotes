@@ -2,6 +2,8 @@
 
 void main(in VS_IN In, out PS_IN Out)
 {
+    Out = (PS_IN)0;
+
     // 頂点変換
     matrix wvp;
     wvp = mul(World, View);
@@ -12,13 +14,20 @@ void main(in VS_IN In, out PS_IN Out)
     In.Normal.w = 0.0f;
     float4 worldNormal = mul(In.Normal, World);
     worldNormal = normalize(worldNormal);
-    float3 lightDirection = normalize(Light.Direction.xyz);
+    float4 worldPosition = mul(In.Position, World);
+    float3 toLight = Light.Position.xyz - worldPosition.xyz;
+    float distanceToLight = length(toLight);
+    float3 lightDirection = (distanceToLight > 0.001f) ? toLight / distanceToLight : float3(0.0f, 1.0f, 0.0f);
+    float lightRange = max(Light.PointLightParam.x, 0.001f);
+    float lightIntensity = max(Light.PointLightParam.y, 0.0f);
+    float attenuation = saturate(1.0f - distanceToLight / lightRange);
+    attenuation = attenuation * attenuation * lightIntensity;
 
     // ランバート反射
     float light = 0.0f;
     if (Light.Enable)
     {
-        light = saturate(-dot(lightDirection, worldNormal.xyz));
+        light = saturate(dot(lightDirection, worldNormal.xyz)) * attenuation;
     }
 
     // 出力カラー計算 (頂点色×マテリアル色にライト乗算)
@@ -30,5 +39,5 @@ void main(in VS_IN In, out PS_IN Out)
 
     Out.Normal = worldNormal;
     Out.TexCoord = In.TexCoord;
-    Out.WorldPosition = mul(In.Position, World);
+    Out.WorldPosition = worldPosition;
 }

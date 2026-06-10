@@ -2,6 +2,8 @@
 
 void main(in VS_IN In, out PS_IN Out)
 {
+    Out = (PS_IN)0;
+
     // 法線方向に少し膨らませ、元モデルより一回り大きい輪郭用モデルにする
     float outlineWidth = max(Parameter.x, 0.0f);
     float4 worldPosition = mul(In.Position, World);

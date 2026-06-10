@@ -22,6 +22,8 @@
 #include "sprite2d.h"
 #include "fade.h"
 #include "sound.h"
+#include "input_manager.h"
+#include "input_monitor_console.h"
 #include "shadermanager.h"
 #include "../framework/imgui/imgui.h"
 #include "../framework/imgui/imgui_impl_win32.h"
@@ -171,6 +173,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	Keyboard_Initialize();
 	Mouse_Initialize(hWnd);
+	Input_Initialize();
+	InputMonitorConsole_Initialize();
 	InitShader();
 	Font_InitializeGlobalData();
 	Sprite_Initialize();
@@ -219,6 +223,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			int steps = 0;
 			while (accumulator >= FIXED_STEP && steps < 5)
 			{
+				Input_Update();
+				InputMonitorConsole_Update();
+
 				// ウィンドウ操作（論理ステップ内で判定：keycopy後に正しいトリガーを参照できる）
 				// Alt+Enterで全画面切り替え
 				if (Keyboard_IsKeyDown(KK_LEFTALT) || Keyboard_IsKeyDown(KK_RIGHTALT))
@@ -325,6 +332,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	ImGui::DestroyContext();
 
 	Finalize();
+	Input_Finalize();
+	InputMonitorConsole_Finalize();
 	UninitSound();
 	Fade_Finalize();
 	Font_FinalizeGlobalData();
@@ -353,6 +362,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return true;
 
 	Mouse_ProcessMessage(uMsg, wParam, lParam);
+	Gamepad_ProcessMessage(uMsg, wParam, lParam);
 
 	switch (uMsg)
 	{
