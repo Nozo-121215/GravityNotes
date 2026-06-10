@@ -107,6 +107,7 @@ public:
 	// setters
 	void SetPos(const XMFLOAT2& p) { m_Position = p; }
 	void SetRot(float r) { m_Rotation = r; }
+	void SetRotation(float r) { m_Rotation = r; }
 	void SetSize(const XMFLOAT2& s) { m_Scale = s; }
 
 	// adders
