@@ -112,6 +112,9 @@
     <ClCompile Include="framework\keyboard.cpp">
       <Filter>フレームワーク\input</Filter>
     </ClCompile>
+    <ClCompile Include="debugscene\debugscene.cpp">
+      <Filter>デバッグ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework\camera.h">
@@ -254,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="framework\gamepad.h">
       <Filter>フレームワーク\input</Filter>
+    </ClInclude>
+    <ClInclude Include="debugscene\debugscene.h">
+      <Filter>デバッグ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
