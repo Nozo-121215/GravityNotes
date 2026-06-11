@@ -16,27 +16,28 @@
 
 using namespace DirectX;
 
-// 1. Ảnh nền phòng/bàn máy hát
+// 1. 背景画像（ビニール盤ジャケット背景）
 static Sprite2D* g_pBackground = nullptr;
 
-// 2. Đĩa than chính ở giữa và Kim đọc đĩa (Tonearm)
+// 2. 中央のメインビニール盤とトーンアーム（腕）
 static Sprite2D* g_pMainVinyl = nullptr;
 static Sprite2D* g_pToneArm = nullptr;
 
-// 3. Hàng đĩa bên trái (Dùng mảng để quản lý)
+// 3. 左側のステージ選択盤（配列で管理）
 const int MAX_STAGES = 5;
 static Sprite2D* g_pStageDisks[MAX_STAGES] = { nullptr };
 static ClickFont* g_pStageButtons[MAX_STAGES] = { nullptr };
 
-// 4. Biến logic quản lý
-static int g_SelectedStage = 0;      // Màn chơi đang được chọn
-static float g_VinylRotation = 0.0f; // Góc xoay của đĩa chính
+// 4. ロジック管理用の変数
+static int g_SelectedStage = 0;      // 現在選択されているステージ
+static float g_VinylRotation = 0.0f; // メインビニール盤の回転角度
 
 // ①インスタンス、ポインタ用意
 static MultiLineFontRenderer* g_pScoreInfoText = nullptr;
 static std::vector<ScoreSummary> g_ScoreSummaries;
 static int g_SelectedScoreIndex = 0;
 
+//g_pScoreInfoTextに現在表示しているjsonのファイル名を返す関数
 static std::string GetSelectedJsonName()
 {
 	if (g_ScoreSummaries.empty())
@@ -119,63 +120,64 @@ static void ChangeSelectedScore(int delta)
 // StageSelectシーンの生成と、譜面概要一覧の再読み込みを行う
 void StageSelect_Initialize(void)
 {
-	// Khởi tạo nền (Độ phân giải 2560 x 1440)
+	// 背景スプライトの初期化（解像度 2560 x 1440）
 	g_pBackground = new Sprite2D(
 		{ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f },
 		{ 740.0f, 556.0f },
 		0.0f,
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
-		BLENDSTATE_NONE,
+		BLENDSTATE_ALFA,
 		L"asset\\texture\\vinylbg.png"
 	);
 
-	// Khởi tạo hàng đĩa bên trái và nút bấm tương ứng
+	// 左側のステージディスク配列とそれに対応するボタンを初期化
 	for (int i = 0; i < MAX_STAGES; i++) {
 		float posX = 130.0f;
-		float posY = 50.0f + (i * 150.0f); // Tọa độ Y dịch chuyển dần xuống dưới
+		float posY = 50.0f + (i * 150.0f); // Y座標は徐々に下へ移動
 
 		g_pStageDisks[i] = new Sprite2D(
 			{ posX, posY },
 			{ 150.0f, 150.0f },
 			0.0f,
 			{ 1.0f, 1.0f, 1.0f, 1.0f },
-			BLENDSTATE_NONE,
+			BLENDSTATE_ALFA,
 			L"asset\\texture\\vinmain.png"
 		);
 
-		// Đặt chữ/nút đè đúng lên vị trí của chiếc đĩa đó
+		// ディスクの位置にテキスト/ボタンを配置
 		g_pStageButtons[i] = new ClickFont(
 			{ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 4.0f * 3.5 },
-			50.0f, // Giảm size chữ một chút cho vừa khít cái đĩa
+			50.0f, // ディスクに合わせるようにサイズを調整
 			0.0f,
 			{ 1.0f, 1.0f, 1.0f, 1.0f },
 			{ 1.0f, 0.8f, 0.2f, 1.0f },
-			"PLAY" // Tạm thời đặt tên chung, bạn có thể custom tùy ý
+			"PLAY" // 仮の表示テキスト、必要に応じてカスタマイズ可能
 		);
 	}
 
-	// Khởi tạo đĩa chính ở GIỮA màn hình
+	// 画面中央のメインビニール盤を初期化
 	g_pMainVinyl = new Sprite2D(
-		{ SCREEN_WIDTH / 2.0f-85.0f, SCREEN_HEIGHT / 2.0f +2.0f},
+		{ SCREEN_WIDTH / 2.0f - 85.0f, SCREEN_HEIGHT / 2.0f + 2.0f },
 		{ 500.0f, 500.0f },
 		0.0f,
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
-		BLENDSTATE_ALFA, // ĐỔI TỪ BLENDSTATE_NONE THÀNH ALPHA
+		BLENDSTATE_ALFA, // BLENDSTATE_NONEからアルファブレンディングに変更
 		L"asset\\texture\\vinmain.png"
 	);
 
-	// Tương tự cho g_pToneArm và g_pStageDisks[i]
+	// トーンアーム（針）も同様に初期化
 	g_pToneArm = new Sprite2D(
 		{ SCREEN_WIDTH / 2.0f + 350.0f, SCREEN_HEIGHT / 2.0f - 300.0f },
 		{ 400.0f, 400.0f },
 		0.0f,
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
-		BLENDSTATE_ALFA, // ĐỔI THÀNH ALPHA
+		BLENDSTATE_ALFA, // アルファブレンディングを使用
 		L"asset\\texture\\tonearm.png"
 	);
 
+	// スコア情報テキストの初期化（左右矢印キーで曲を変更可能）
 	g_pScoreInfoText = new MultiLineFontRenderer(
-		{ SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 2 },
+		{ SCREEN_WIDTH - 200.0f, SCREEN_HEIGHT - 200.0f },
 		28.0f,
 		0.0f,
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
@@ -193,82 +195,91 @@ void StageSelect_Initialize(void)
 	g_SelectedScoreIndex = 0;
 	RefreshSelectedScoreText();
 
-	UnLockMouse();//マウスアンロック
+	UnLockMouse(); // マウスをアンロック
 }
 
 // 入力処理（左右で選曲）と決定クリック時のシーン遷移を行う
 void StageSelect_Update(void)
 {
-	// 1. Cập nhật trạng thái cho toàn bộ các nút bên trái
+	// 1. 左側の全ボタンの状態を更新
 	for (int i = 0; i < MAX_STAGES; i++)
 	{
 		g_pStageButtons[i]->Update();
 
-		// Nếu người chơi click chọn đĩa thứ i
+		// プレイヤーがディスク i をクリックした場合
 		if (g_pStageButtons[i]->IsClick())
 		{
-			g_SelectedStage = i; // Ghi nhận màn chơi được chọn
+			g_SelectedStage = i; // 選択されたステージを記録
 
-			// Bạn có thể phát âm thanh chuyển đĩa tại đây bằng thư viện sound.h
+			// ここでsound.hを使用してディスク切り替え音を再生可能
 			// PlaySound(...);
 
-			// Nếu muốn bấm phát ăn ngay vào game:
+			// ==============================================
+			// 
+			//  ここ超重要
+			//
+			// ==============================================
+			//jsonの指定はSetPlayJson関数を使用する
+			//引数の例　「shiningstar.json」
+			//今回は仮表示テキストg_pScoreInfoTextと連携するため、
+			//GetSelectedJsonName（返り値string）を使用して選択中のファイル名を返している
+			//SetPlayJson→SetSceneFadeの順を厳守。
+
+			SetPlayJson(GetSelectedJsonName());
 			SetSceneFade(SCENE_GAME);
+
+			// ==============================================
+
 		}
 	}
 
-	// 2. Làm cho đĩa chính ở giữa xoay tròn mượt mà
-	g_VinylRotation += 0.5f; // Tốc độ xoay (tăng/giảm tùy ý)
+	// 2. メインビニール盤を滑らかに回転させる
+	g_VinylRotation += 0.5f; // 回転速度（必要に応じて増減可能）
 	if (g_VinylRotation >= 360.0f) {
 		g_VinylRotation -= 360.0f;
 	}
 
-	// Cập nhật góc quay vào Sprite đĩa chính
+	// メインビニール盤スプライトに回転角度を反映
 	if (g_pMainVinyl != nullptr) {
-		g_pMainVinyl->SetRotation(g_VinylRotation);
-	//③処理
-	g_pChangeSceneText->Update();
+		g_pMainVinyl->SetRot(g_VinylRotation);
+		// ③回転処理
+	}
 
 	if (Keyboard_IsKeyDownTrigger(KK_LEFT))
 	{
-		ChangeSelectedScore(-1);
+		ChangeSelectedScore(-1); // 左矢印キー: 前の曲に変更
 	}
 
 	if (Keyboard_IsKeyDownTrigger(KK_RIGHT))
 	{
-		ChangeSelectedScore(1);
+		ChangeSelectedScore(1); // 右矢印キー: 次の曲に変更
 	}
 
-	//ClickFontがクリックされた
-	//if (g_pChangeSceneText->IsClick())
-	//{
-	//	SetPlayJson(GetSelectedJsonName());
-	//	SetSceneFade(SCENE_GAME);
-	//}
 }
 
 // StageSelectシーンの描画を行う
 void StageSelect_Draw(void)
 {
-	// ④ Vẽ theo thứ tự từ dưới lên trên
-	g_pBackground->Draw(); // Vẽ nền trước
+	// ④ 描画順序: 奥から手前へ層状に描画
+	g_pBackground->Draw(); // 背景を先に描画
 
-	// Vẽ toàn bộ danh sách đĩa và chữ bên trái
+	// 左側の全てのディスクリストとテキストを描画
 	for (int i = 0; i < MAX_STAGES; i++) {
 		g_pStageDisks[i]->Draw();
 		g_pStageButtons[i]->Draw();
 	}
 
-	g_pMainVinyl->Draw(); // Vẽ đĩa xoay chính ở giữa
-	g_pToneArm->Draw();   // Vẽ kim đĩa đè lên trên cùng đĩa chính
-	//④描画
+	g_pMainVinyl->Draw(); // 中央のメインビニール盤を描画
+	g_pToneArm->Draw();   // トーンアーム（針）をメインビニール盤の上に描画
+
+	// ④スコア情報テキストを描画
 	g_pScoreInfoText->Draw();
 }
 
 // StageSelectシーンで確保したリソースを解放する
 void StageSelect_Finalize(void)
 {
-	// ⑤ Giải phóng toàn bộ bộ nhớ sạch sẽ để tránh rò rỉ (Memory Leak)
+	// ⑤ メモリリーク防止のため全てのメモリを適切に解放
 	SAFE_DELETE(g_pBackground);
 	SAFE_DELETE(g_pMainVinyl);
 	SAFE_DELETE(g_pToneArm);
@@ -279,5 +290,5 @@ void StageSelect_Finalize(void)
 	}
 
 	SAFE_DELETE(g_pScoreInfoText);
-	g_ScoreSummaries.clear();
+	g_ScoreSummaries.clear(); // スコア情報リストをクリア
 }
