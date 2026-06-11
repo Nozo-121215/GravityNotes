@@ -11,6 +11,7 @@
 #include "ClickFont.h"
 #include "MultiLineFontRenderer.h"
 #include "scoresummaryloader.h"
+#include "scene.h"
 #include <cstdio>
 
 using namespace DirectX;
@@ -19,18 +20,37 @@ using namespace DirectX;
 static Sprite2D* g_pStageSelectSprite = nullptr;
 static ClickFont* g_pChangeSceneText = nullptr;
 static MultiLineFontRenderer* g_pScoreInfoText = nullptr;
+static std::vector<ScoreSummary> g_ScoreSummaries;
 static int g_SelectedScoreIndex = 0;
 
-// 現在選択中の楽曲情報を1曲分だけ整形して表示し、選択中json名をManagerへ同期する
+static std::string GetSelectedJsonName()
+{
+	if (g_ScoreSummaries.empty())
+	{
+		return "";
+	}
+
+	if (g_SelectedScoreIndex < 0)
+	{
+		g_SelectedScoreIndex = 0;
+	}
+	if (g_SelectedScoreIndex >= static_cast<int>(g_ScoreSummaries.size()))
+	{
+		g_SelectedScoreIndex = static_cast<int>(g_ScoreSummaries.size()) - 1;
+	}
+
+	return g_ScoreSummaries[static_cast<size_t>(g_SelectedScoreIndex)].jsonname;
+}
+
+// 現在選択中の楽曲情報を1曲分だけ整形して表示する
 static void RefreshSelectedScoreText()
 {
-	const auto& summaries = ScoreSummaryManager::GetInstance().GetSummaries();
 	if (g_pScoreInfoText == nullptr)
 	{
 		return;
 	}
 
-	if (summaries.empty())
+	if (g_ScoreSummaries.empty())
 	{
 		g_pScoreInfoText->SetText("No score json found");
 		return;
@@ -40,13 +60,12 @@ static void RefreshSelectedScoreText()
 	{
 		g_SelectedScoreIndex = 0;
 	}
-	if (g_SelectedScoreIndex >= static_cast<int>(summaries.size()))
+	if (g_SelectedScoreIndex >= static_cast<int>(g_ScoreSummaries.size()))
 	{
-		g_SelectedScoreIndex = static_cast<int>(summaries.size()) - 1;
+		g_SelectedScoreIndex = static_cast<int>(g_ScoreSummaries.size()) - 1;
 	}
 
-	const ScoreSummary& summary = summaries[static_cast<size_t>(g_SelectedScoreIndex)];
-	ScoreSummaryManager::GetInstance().SetSelectedJsonName(summary.jsonname);
+	const ScoreSummary& summary = g_ScoreSummaries[static_cast<size_t>(g_SelectedScoreIndex)];
 
 	char buf[1024] = {};
 	std::snprintf(
@@ -54,7 +73,7 @@ static void RefreshSelectedScoreText()
 		sizeof(buf),
 		"[%d/%d]\nMusic: %s\n作曲者: %s\n譜面作者: %s\n難易度: %.1f\nBPM: %.1f\nJSON: %s",
 		g_SelectedScoreIndex + 1,
-		static_cast<int>(summaries.size()),
+		static_cast<int>(g_ScoreSummaries.size()),
 		summary.musicname.c_str(),
 		summary.musicauthor.c_str(),
 		summary.scoreauthor.c_str(),
@@ -68,13 +87,12 @@ static void RefreshSelectedScoreText()
 // 左右入力で選択中インデックスを循環更新し、表示内容を更新する
 static void ChangeSelectedScore(int delta)
 {
-	const auto& summaries = ScoreSummaryManager::GetInstance().GetSummaries();
-	if (summaries.empty())
+	if (g_ScoreSummaries.empty())
 	{
 		return;
 	}
 
-	const int count = static_cast<int>(summaries.size());
+	const int count = static_cast<int>(g_ScoreSummaries.size());
 	g_SelectedScoreIndex = (g_SelectedScoreIndex + delta) % count;
 	if (g_SelectedScoreIndex < 0)
 	{
@@ -115,10 +133,11 @@ void StageSelect_Initialize(void)
 		1.35f
 	);
 
-	const bool loaded = ScoreSummaryManager::GetInstance().ReloadSummaries();
+	g_ScoreSummaries = LoadScoreSummaries();
+	const bool loaded = !g_ScoreSummaries.empty();
 	hal::dout << "[StageSelect] score summary reload: "
 		<< (loaded ? "success" : "failed")
-		<< " count=" << ScoreSummaryManager::GetInstance().GetSummaryCount()
+		<< " count=" << g_ScoreSummaries.size()
 		<< std::endl;
 
 	g_SelectedScoreIndex = 0;
@@ -146,6 +165,7 @@ void StageSelect_Update(void)
 	//ClickFontがクリックされた
 	if (g_pChangeSceneText->IsClick())
 	{
+		SetPlayJson(GetSelectedJsonName());
 		SetSceneFade(SCENE_GAME);
 	}
 }
@@ -166,4 +186,5 @@ void StageSelect_Finalize(void)
 	SAFE_DELETE(g_pStageSelectSprite);
 	SAFE_DELETE(g_pScoreInfoText);
 	SAFE_DELETE(g_pChangeSceneText);
+	g_ScoreSummaries.clear();
 }

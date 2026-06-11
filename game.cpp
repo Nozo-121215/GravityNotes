@@ -12,7 +12,7 @@
 #include "komachi/debug_ui.h"
 #include "sound.h"
 #include "ClickFont.h"
-#include "scoresummaryloader.h"
+#include "scene.h"
 
 using namespace DirectX;
 
@@ -42,7 +42,7 @@ void Game_Initialize(void)
 		"[game.cpp] リザルトへ"										//テキスト
 	);
 
-	const std::string selectedJson = ScoreSummaryManager::GetInstance().GetSelectedJsonName();
+	const std::string selectedJson = GetPlayJson();
 	g_pSelectedJsonText = new FontRenderer(
 		{ SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 2.0f },
 		28.0f,

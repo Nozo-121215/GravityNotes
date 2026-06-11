@@ -20,126 +20,69 @@ struct ScoreSummary
     std::string music;
 };
 
-class ScoreSummaryManager
+inline std::vector<ScoreSummary> LoadScoreSummaries(const std::string& directoryPath = "asset\\score")
 {
-public:
-    static ScoreSummaryManager& GetInstance()
-    {
-        static ScoreSummaryManager instance;
-        return instance;
-    }
+    std::vector<ScoreSummary> summaries;
 
-    bool ReloadSummaries(const std::string& directoryPath = "asset\\score")
-    {
-        summaries.clear();
-
-        const std::string pattern = directoryPath + "\\*.json";
-        WIN32_FIND_DATAA findData = {};
-        HANDLE findHandle = FindFirstFileA(pattern.c_str(), &findData);
-        if (findHandle == INVALID_HANDLE_VALUE)
-        {
-            selectedJsonName.clear();
-            return false;
-        }
-
-        do
-        {
-            if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
-            {
-                continue;
-            }
-
-            const std::string jsonName = findData.cFileName;
-            const std::string jsonPath = directoryPath + "\\" + jsonName;
-
-            std::ifstream file(jsonPath);
-            if (!file.is_open())
-            {
-                continue;
-            }
-
-            try
-            {
-                nlohmann::json jsonData;
-                file >> jsonData;
-
-                ScoreSummary summary;
-                summary.jsonname = jsonName;
-                hal::dout << summary.jsonname << std::endl;
-                summary.musicname = jsonData.value("musicname", "");
-                hal::dout << summary.musicname << std::endl;
-                summary.musicauthor = jsonData.value("musicauthor", "");
-                summary.scoreauthor = jsonData.value("scoreauthor", "");
-                summary.difficulty = jsonData.value("difficulty", 0.0f);
-                summary.bpm = jsonData.value("bpm", 0.0f);
-                summary.thumbnail = jsonData.value("thumbnail", "");
-                summary.music = jsonData.value("music", "");
-
-                summaries.push_back(summary);
-            }
-            catch (...)
-            {
-                // 読み込み失敗ファイルのみスキップ
-                continue;
-            }
-        } while (FindNextFileA(findHandle, &findData) != 0);
-
-        FindClose(findHandle);
-
-        std::sort(summaries.begin(), summaries.end(), [](const ScoreSummary& a, const ScoreSummary& b)
-        {
-            if (a.difficulty == b.difficulty)
-            {
-                return a.jsonname < b.jsonname;
-            }
-            return a.difficulty > b.difficulty;
-        });
-
-        if (summaries.empty())
-        {
-            selectedJsonName.clear();
-        }
-        else if (selectedJsonName.empty() || !HasJsonName(selectedJsonName))
-        {
-            selectedJsonName = summaries.front().jsonname;
-        }
-
-        return !summaries.empty();
-    }
-
-    const std::vector<ScoreSummary>& GetSummaries() const
+    const std::string pattern = directoryPath + "\\*.json";
+    WIN32_FIND_DATAA findData = {};
+    HANDLE findHandle = FindFirstFileA(pattern.c_str(), &findData);
+    if (findHandle == INVALID_HANDLE_VALUE)
     {
         return summaries;
     }
 
-    void SetSelectedJsonName(const std::string& jsonName)
+    do
     {
-        selectedJsonName = jsonName;
-    }
-
-    const std::string& GetSelectedJsonName() const
-    {
-        return selectedJsonName;
-    }
-
-    std::size_t GetSummaryCount() const
-    {
-        return summaries.size();
-    }
-
-private:
-    bool HasJsonName(const std::string& jsonName) const
-    {
-        for (const auto& summary : summaries)
+        if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
         {
-            if (summary.jsonname == jsonName)
-            {
-                return true;
-            }
+            continue;
         }
-        return false;
-    }
 
-    std::vector<ScoreSummary> summaries;
-    std::string selectedJsonName;
-};
+        const std::string jsonName = findData.cFileName;
+        const std::string jsonPath = directoryPath + "\\" + jsonName;
+
+        std::ifstream file(jsonPath);
+        if (!file.is_open())
+        {
+            continue;
+        }
+
+        try
+        {
+            nlohmann::json jsonData;
+            file >> jsonData;
+
+            ScoreSummary summary;
+            summary.jsonname = jsonName;
+            hal::dout << summary.jsonname << std::endl;
+            summary.musicname = jsonData.value("musicname", "");
+            hal::dout << summary.musicname << std::endl;
+            summary.musicauthor = jsonData.value("musicauthor", "");
+            summary.scoreauthor = jsonData.value("scoreauthor", "");
+            summary.difficulty = jsonData.value("difficulty", 0.0f);
+            summary.bpm = jsonData.value("bpm", 0.0f);
+            summary.thumbnail = jsonData.value("thumbnail", "");
+            summary.music = jsonData.value("music", "");
+
+            summaries.push_back(summary);
+        }
+        catch (...)
+        {
+            continue;
+        }
+    } while (FindNextFileA(findHandle, &findData) != 0);
+
+    FindClose(findHandle);
+
+    std::sort(summaries.begin(), summaries.end(), [](const ScoreSummary& a, const ScoreSummary& b)
+    {
+        if (a.difficulty == b.difficulty)
+        {
+            return a.jsonname < b.jsonname;
+        }
+        return a.difficulty > b.difficulty;
+    });
+
+    return summaries;
+}
