@@ -12,6 +12,7 @@
 #include "debug_ui.h"
 #include "sound.h"
 #include "ClickFont.h"
+#include "scene.h"
 
 #include "field.h"
 
@@ -20,6 +21,7 @@ using namespace DirectX;
 // ①インスタンス、ポインタ用意
 static Sprite2D* g_pGameSprite = nullptr;
 static ClickFont* g_pChangeSceneText = nullptr;
+static FontRenderer* g_pSelectedJsonText = nullptr;
 
 static Field* g_pField;
 
@@ -44,7 +46,18 @@ void Game_Initialize(void)
 		"[game.cpp] リザルトへ"										//テキスト
 	);
 
+  //フィールドの初期化
 	g_pField->Init();
+  
+  //前シーンで選択されたjsonの仮表示
+	const std::string selectedJson = GetPlayJson();
+	g_pSelectedJsonText = new FontRenderer(
+		{ SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 2.0f },
+		28.0f,
+		0.0f,
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		"Selected JSON: " + (selectedJson.empty() ? std::string("(none)") : selectedJson)
+	);
 
 	UnLockMouse();//マウスアンロック
 }
@@ -80,12 +93,15 @@ void Game_Draw(void)
 	//g_pGameSprite->Draw();
 	//g_pChangeSceneText->Draw();
 	g_pField->Draw();
-}
+	
+	g_pSelectedJsonText->Draw();
+｝
 
 void Game_Finalize(void)
 {
 	//⑤解放
 	SAFE_DELETE(g_pGameSprite);
+	SAFE_DELETE(g_pSelectedJsonText);
 	SAFE_DELETE(g_pChangeSceneText);
 	SAFE_DELETE(g_pField);
 }
