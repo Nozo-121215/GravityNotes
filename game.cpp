@@ -47,6 +47,7 @@ void Game_Initialize(void)
 	);
 
   //フィールドの初期化
+	g_pField = new Field();
 	g_pField->Init();
   
   //前シーンで選択されたjsonの仮表示
@@ -93,9 +94,9 @@ void Game_Draw(void)
 	//g_pGameSprite->Draw();
 	//g_pChangeSceneText->Draw();
 	g_pField->Draw();
-	
+
 	g_pSelectedJsonText->Draw();
-｝
+}
 
 void Game_Finalize(void)
 {
